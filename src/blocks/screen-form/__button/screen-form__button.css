@@ -1,0 +1,15 @@
+.screen-form__button{
+    height: 50px;
+    margin-top: 186px;
+    padding: 0px;
+    border: 0px;
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 21.78px;
+    border-radius: 2px;
+}
+.screen-form__button:hover{
+    opacity: 60%;
+    cursor: pointer;
+}
