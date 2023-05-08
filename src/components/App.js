@@ -10,11 +10,11 @@ import api from "../utils/Api";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
-
+import * as Auth from "../utils/Auth";
 function App() {
   const [isEditProfilePopupOpen, setisEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setisAddPlacePopupOpen] = useState(false);
@@ -22,9 +22,69 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: "", about: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [cards, setCards] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({ email: "" });
+  // const [token, setToken] = useState("");
+
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   setToken(jwt);
+  // }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      Auth.getUserData(token)
+        .then((res) => {
+          const data = res.data;
+          setUserData({ email: data.email });
+          setIsLoggedIn(true);
+          navigate("/cards", { replace: true });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isLoggedIn, navigate]);
+
+  const registerUser = ({ email, password }) => {
+    Auth.register(email, password)
+      .then(() => {
+        navigate("/sign-in");
+        // localStorage.setItem("jwt", res.jwt);
+        // setToken(res.jwt);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const loginUser = ({ email, password }) => {
+    Auth.authorize(email, password)
+      .then((res) => {
+        localStorage.setItem("token", res.token);
+        setIsLoggedIn(true);
+        setUserData(email);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const logOut = () => {
+    localStorage.removeItem("token");
+    console.log("ghbdtn");
+    setIsLoggedIn(false);
+
+    setUserData({
+      email: "",
+      password: "",
+    });
+    navigate("/sign-in");
+  };
 
   useEffect(() => {
     Promise.all([api.getCurrentUser(), api.getCards()])
@@ -177,7 +237,7 @@ function App() {
             element={
               <>
                 <Header title={"Регистрация"} route="/sign-up" />
-                <Login />
+                <Login loginUser={loginUser} />
               </>
             }
           />
@@ -186,23 +246,32 @@ function App() {
             element={
               <>
                 <Header title={"Войти"} route="/sign-in" />
-                <Register />
+                <Register registerUser={registerUser} />
               </>
             }
           />
           <Route
+            path="/cards"
             element={
-              <ProtectedRoute
-                element={Main}
-                loggedIn={isLoggedIn}
-                cards={cards}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onEditAvatar={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-              />
+              <>
+                <Header
+                  title={"Выйти"}
+                  route="/sign-in"
+                  email={userData.email}
+                  onClick={logOut}
+                />
+                <ProtectedRoute
+                  element={Main}
+                  loggedIn={isLoggedIn}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              </>
             }
           />
         </Routes>

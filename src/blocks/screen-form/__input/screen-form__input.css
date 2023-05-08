@@ -1,8 +1,8 @@
-.screen-form__input{
-    border: 0px;
-    background-color: black;
-    border-bottom: 1px solid white;
-    margin-bottom: 30px;
-    padding-bottom: 13px;
-    color: white;
+.screen-form__input {
+  border: none;
+  background-color: black;
+  border-bottom: 1px solid white;
+  margin-bottom: 30px;
+  padding-bottom: 13px;
+  color: white;
 }
