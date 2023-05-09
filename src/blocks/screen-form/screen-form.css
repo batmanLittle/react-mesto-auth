@@ -1,8 +1,13 @@
 .screen-form {
-    max-width: 358px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    padding-top: 60px;
-    padding-bottom: 66px;  
+  max-width: 358px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+  padding-bottom: 66px;
+}
+@media (min-width: 320px) and (max-width: 445px) {
+  .screen-form {
+    max-width: 260px;
+  }
 }

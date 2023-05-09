@@ -27,7 +27,9 @@ function App() {
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({ email: "" });
-  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [isSuccessRegistration, setIsSuccessRegistration] = useState(false);
 
   const navigate = useNavigate();
 
@@ -53,12 +55,16 @@ function App() {
   const registerUser = ({ email, password }) => {
     Auth.register(email, password)
       .then(() => {
-        navigate("/sign-in");
+        navigate("/sign-in", { replace: true });
+        setIsInfoTooltipOpen(true);
+        setIsSuccessRegistration(true);
         // localStorage.setItem("jwt", res.jwt);
         // setToken(res.jwt);
       })
       .catch((err) => {
         console.log(err);
+        setIsInfoTooltipOpen(true);
+        setIsSuccessRegistration(false);
       });
   };
 
@@ -71,6 +77,8 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        setIsInfoTooltipOpen(true);
+        setIsSuccessRegistration(false);
       });
   };
 
@@ -197,12 +205,14 @@ function App() {
     setisAddPlacePopupOpen(false);
     setisEditProfilePopupOpen(false);
     setisEditAvatarPopupOpen(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard({});
   }
 
   const isOpen =
     isEditAvatarPopupOpen ||
     isEditProfilePopupOpen ||
+    isInfoTooltipOpen ||
     isAddPlacePopupOpen ||
     selectedCard;
 
@@ -235,7 +245,11 @@ function App() {
   return (
     <div className="page">
       <currentUserContext.Provider value={currentUser}>
-        <InfoTooltip />
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          isSuccess={isSuccessRegistration}
+        />
         <Routes>
           <Route
             path="/sign-in"

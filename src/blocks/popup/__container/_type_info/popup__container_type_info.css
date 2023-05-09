@@ -1,10 +1,14 @@
-.popup__container_type_info{
-    width: 430px;
-    background-color: white;
-    align-items: center;
-  
-    display: flex;
-    flex-direction: column;
-    /* margin: auto; */
-    
+.popup__container_type_info {
+  width: 430px;
+  background-color: white;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 60px;
+}
+@media (min-width: 320px) and (max-width: 540px) {
+  .popup__container_type_info {
+    max-width: 280px;
+    padding-bottom: 50px;
+  }
 }

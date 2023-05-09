@@ -17,7 +17,12 @@ const makeRequest = (url, method, body, token) => {
       Authorization: `Bearer ${token}`,
     };
   }
-  return fetch(`${BASE_URL}/${url}`, options).then((res) => res.json());
+  return fetch(`${BASE_URL}/${url}`, options).then((res) => {
+    if (!res.ok) {
+      throw new Error(`Ошибка: ${res.status}`);
+    }
+    return res.json();
+  });
 };
 
 export const authorize = (email, password) => {
