@@ -27,7 +27,6 @@ function App() {
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({ email: "" });
-  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isSuccessRegistration, setIsSuccessRegistration] = useState(false);
 
@@ -41,13 +40,10 @@ function App() {
           const data = res.data;
           setUserData({ email: data.email });
           setIsLoggedIn(true);
-          navigate("/", { replace: true });
+          navigate("/react-mesto-auth", { replace: true });
         })
         .catch((err) => {
           console.log(err);
-        })
-        .finally(() => {
-          setIsLoadingAuth(false);
         });
     }
   }, [isLoggedIn, navigate]);
@@ -238,10 +234,6 @@ function App() {
     }
   }, [isOpen]);
 
-  if (isLoadingAuth) {
-    return <div>Загрузка..</div>;
-  }
-
   return (
     <div className="page">
       <currentUserContext.Provider value={currentUser}>
@@ -270,7 +262,7 @@ function App() {
             }
           />
           <Route
-            path="/"
+            path="/react-mesto-auth"
             element={
               <>
                 <Header
@@ -295,7 +287,6 @@ function App() {
           />
         </Routes>
 
-        <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
@@ -322,6 +313,7 @@ function App() {
           isLoading={isLoading}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <Footer />
       </currentUserContext.Provider>
     </div>
   );

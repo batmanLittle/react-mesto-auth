@@ -1,8 +1,12 @@
 .screen-form__input {
   border: none;
   background-color: black;
-  border-bottom: 1px solid white;
+  border-bottom: 2px solid #cccccc;
   margin-bottom: 30px;
   padding-bottom: 13px;
   color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.94px;
 }
