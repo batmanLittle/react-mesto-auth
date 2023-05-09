@@ -1,0 +1,10 @@
+.popup__container_type_info{
+    width: 430px;
+    background-color: white;
+    align-items: center;
+  
+    display: flex;
+    flex-direction: column;
+    /* margin: auto; */
+    
+}

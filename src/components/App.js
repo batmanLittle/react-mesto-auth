@@ -15,6 +15,8 @@ import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import * as Auth from "../utils/Auth";
+import InfoTooltip from "./InfoTooltip";
+
 function App() {
   const [isEditProfilePopupOpen, setisEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setisAddPlacePopupOpen] = useState(false);
@@ -25,14 +27,9 @@ function App() {
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({ email: "" });
-  // const [token, setToken] = useState("");
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem("jwt");
-  //   setToken(jwt);
-  // }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -42,10 +39,13 @@ function App() {
           const data = res.data;
           setUserData({ email: data.email });
           setIsLoggedIn(true);
-          navigate("/cards", { replace: true });
+          navigate("/", { replace: true });
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoadingAuth(false);
         });
     }
   }, [isLoggedIn, navigate]);
@@ -76,7 +76,7 @@ function App() {
 
   const logOut = () => {
     localStorage.removeItem("token");
-    console.log("ghbdtn");
+
     setIsLoggedIn(false);
 
     setUserData({
@@ -228,9 +228,14 @@ function App() {
     }
   }, [isOpen]);
 
+  if (isLoadingAuth) {
+    return <div>Загрузка..</div>;
+  }
+
   return (
     <div className="page">
       <currentUserContext.Provider value={currentUser}>
+        <InfoTooltip />
         <Routes>
           <Route
             path="/sign-in"
@@ -251,7 +256,7 @@ function App() {
             }
           />
           <Route
-            path="/cards"
+            path="/"
             element={
               <>
                 <Header
