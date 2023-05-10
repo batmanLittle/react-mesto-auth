@@ -54,8 +54,6 @@ function App() {
         navigate("/sign-in", { replace: true });
         setIsInfoTooltipOpen(true);
         setIsSuccessRegistration(true);
-        // localStorage.setItem("jwt", res.jwt);
-        // setToken(res.jwt);
       })
       .catch((err) => {
         console.log(err);
@@ -91,15 +89,17 @@ function App() {
   };
 
   useEffect(() => {
-    Promise.all([api.getCurrentUser(), api.getCards()])
-      .then(([data, cards]) => {
-        setCurrentUser(data);
-        setCards(cards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (isLoggedIn) {
+      Promise.all([api.getCurrentUser(), api.getCards()])
+        .then(([data, cards]) => {
+          setCurrentUser(data);
+          setCards(cards);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isLoggedIn]);
 
   function handleAddNewCard(name, link) {
     setIsLoading(true);
